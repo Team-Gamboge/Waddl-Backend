@@ -29,5 +29,5 @@ public class Task {
     @Column
     private LocalDate completedDate;
     @Column
-    private boolean taskStatus;
+    private boolean isCompleted;
 }
