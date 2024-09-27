@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.mockito.Mockito.*;
 @DataJpaTest
-public class TaskManagerServiceTests {
+public class TaskManagerServiceImplTest {
     @Mock
     private TaskRepository mockTaskRepository;
     @InjectMocks
@@ -38,7 +38,7 @@ public class TaskManagerServiceTests {
 
         when(mockTaskRepository.findAll()).thenReturn(tasks);
         //Act
-        List<Task> actualResult = TaskManagerServiceImpl.getAllTasks();
+        List<Task> actualResult = taskManagerServiceImpl.getAllTasks();
         //Assert
         assertThat(actualResult).hasSize(3);
         assertThat(actualResult).isEqualTo(tasks);
@@ -50,8 +50,8 @@ public class TaskManagerServiceTests {
         Task expectedResult = new Task(3L, "Go eminem", "Go Encore", LocalDate.of(2024,9,27),
                 LocalDate.of( 2024,9,28), false);
         when(mockTaskRepository.findById(expectedResult.getId())).thenReturn(Optional.of(expectedResult));
-        Task actualResult = taskManagerServiceImpl.getTaskById(expectedResult.getId());
-        assertEquals(actualResult, expectedResult);
+        Optional<Task> actualResult = taskManagerServiceImpl.getTaskById(expectedResult.getId());
+        assertEquals(actualResult.get(), expectedResult);
     }
 
     @Test

@@ -20,7 +20,7 @@ public class TaskManagerServiceImpl implements TaskManagerService {
     }
 
     @Override
-    public Optional<Task> getTaskById() {
+    public Optional<Task> getTaskById(Long id) {
         return Optional.empty();
     }
 
@@ -35,7 +35,7 @@ public class TaskManagerServiceImpl implements TaskManagerService {
     }
 
     @Override
-    public void deleteTaskById() {
+    public void deleteTaskById(Long id) {
 
     }
 }
