@@ -10,9 +10,9 @@ import java.util.Optional;
 public interface TaskManagerService {
 
     List<Task> getAllTasks();
-    Optional<Task> getTaskById();
+    Optional<Task> getTaskById(Long id);
     Task addTask(Task task);
     Task updateTaskById(Long id, Task task);
-    void deleteTaskById();
+    void deleteTaskById(Long id);
 
 }

@@ -90,7 +90,7 @@ public class TaskControllerTest {
     }
 
     @Test
-    @DisplayName("Can retrieve tak by Id")
+    @DisplayName("Can retrieve task by Id")
     public void canRetrieveTaskById() throws Exception {
         // Arrange
         given(taskManagerService.getTaskById(1L))
@@ -107,7 +107,7 @@ public class TaskControllerTest {
     @DisplayName("Can add task with post request ")
     public void canAddTaskWithPostRequest() throws Exception {
 
-        given(taskManagerService.addNewTask(any(Task.class))).willReturn(mockTask2);
+        given(taskManagerService.addTask(any(Task.class))).willReturn(mockTask2);
 
         List<Task> mockTaskList = Collections.singletonList(mockTask2);
         given(taskManagerService.getAllTasks()).willReturn(mockTaskList);
@@ -136,7 +136,7 @@ public class TaskControllerTest {
         updatedTaskInfo.setCompletedDate(LocalDate.of( 2024,9,28));
         updatedTaskInfo.setCompleted(false);
 
-        when(TaskManagerService.updateTaskById(anyLong(), any(Task.class))).thenReturn(updatedTaskInfo);
+        when(taskManagerService.updateTaskById(anyLong(), any(Task.class))).thenReturn(updatedTaskInfo);
 
         mockMvc.perform(put("/api/v1/tasks/1")
                         .contentType(MediaType.APPLICATION_JSON)
