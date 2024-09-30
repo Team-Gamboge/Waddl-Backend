@@ -5,8 +5,7 @@ import com.northcoders.gamboge.waddl_api.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class TaskManagerServiceImpl implements TaskManagerService {
@@ -16,26 +15,47 @@ public class TaskManagerServiceImpl implements TaskManagerService {
 
     @Override
     public List<Task> getAllTasks() {
-        return List.of();
+        ArrayList<Task> foundTasks = new ArrayList<>();
+
+        for (Task task : taskRepository.findAll()) {
+            foundTasks.add(task);
+        }
+
+        return foundTasks;
     }
 
     @Override
     public Optional<Task> getTaskById(Long id) {
-        return Optional.empty();
+        return taskRepository.findById(id);
     }
 
     @Override
     public Task addTask(Task task) {
-        return null;
+        if (task == null) {
+            throw new IllegalArgumentException("Task cannot be null");
+        }
+        return taskRepository.save(task);
     }
 
     @Override
     public Task updateTaskById(Long id, Task task) {
-        return null;
+        Optional<Task> optionalTask = taskRepository.findById(id);
+
+        if (optionalTask.isPresent()) {
+            Task existingTask = optionalTask.get();
+
+            existingTask.setTitle(task.getTitle());
+            existingTask.setDescription(task.getDescription());
+            existingTask.setCompleted(task.isCompleted());
+
+            return taskRepository.save(existingTask);
+        } else {
+            throw new NoSuchElementException("Task not found with entered ID: " + id);
+        }
     }
 
     @Override
     public void deleteTaskById(Long id) {
-
+        taskRepository.deleteById(id);
     }
 }

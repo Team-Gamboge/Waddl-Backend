@@ -2,20 +2,19 @@ package com.northcoders.gamboge.waddl_api.controller;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.northcoders.gamboge.waddl_api.model.Task;
-import com.northcoders.gamboge.waddl_api.service.TaskManagerService;
+import com.northcoders.gamboge.waddl_api.repository.TaskRepository;
 import com.northcoders.gamboge.waddl_api.service.TaskManagerServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -32,11 +31,9 @@ import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.doNothing;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @AutoConfigureMockMvc
 @SpringBootTest
@@ -46,7 +43,10 @@ public class TaskControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private TaskManagerService taskManagerService;
+    private TaskManagerServiceImpl taskManagerService;
+
+    @MockBean
+    private TaskRepository repo;
 
     @InjectMocks
     private TaskController taskController;
@@ -59,21 +59,26 @@ public class TaskControllerTest {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
+        objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
 
         // Initialize mock data
         mockTask1 = new Task();
+        mockTask1.setId(1L);
         mockTask1.setTitle("Clean room");
         mockTask1.setDescription("Put washing away, hoover");
-        mockTask1.setCreatedDate(LocalDate.of(2024,9,27));
-        mockTask1.setCompletedDate(LocalDate.of( 2024,9,28));
+        mockTask1.setCreatedDate(LocalDate.of(2024, 9, 27));
+        mockTask1.setCompletedDate(LocalDate.of(2024, 9, 28));
         mockTask1.setCompleted(false);
 
         mockTask2 = new Task();
+        mockTask2.setId(2L);
         mockTask2.setTitle("Go shopping");
         mockTask2.setDescription("Buy bread, milk, eggs");
-        mockTask2.setCreatedDate(LocalDate.of(2024,9,27));
-        mockTask2.setCompletedDate(LocalDate.of( 2024,9,28));
+        mockTask2.setCreatedDate(LocalDate.of(2024, 9, 27));
+        mockTask2.setCompletedDate(LocalDate.of(2024, 9, 28));
         mockTask2.setCompleted(false);
+
     }
 
     @Test
@@ -81,20 +86,25 @@ public class TaskControllerTest {
     public void canRetrieveAllTasks() throws Exception {
         //arrange
         List<Task> mockTaskList = Arrays.asList(mockTask1, mockTask2);
-        given(taskManagerService.getAllTasks()).willReturn(mockTaskList);
+        when(taskManagerService.getAllTasks()).thenReturn(mockTaskList);
+        List<Task> returnedTasks = taskManagerService.getAllTasks();
+
         //act and assert
         mockMvc.perform(get("/api/v1/tasks")
-                        .accept(MediaType.APPLICATION_JSON))
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(mockTaskList)));
+                .andExpect(content().json(objectMapper.writeValueAsString(mockTaskList)))
+                .andReturn();
+        var status = status();
+        var content = content();
     }
 
     @Test
     @DisplayName("Can retrieve task by Id")
     public void canRetrieveTaskById() throws Exception {
         // Arrange
-        given(taskManagerService.getTaskById(1L))
-                .willReturn(Optional.of(mockTask1));
+        when(taskManagerService.getTaskById(1L))
+                .thenReturn(Optional.of(mockTask1));
 
         // Act & Assert
         mockMvc.perform(get("/api/v1/tasks/1")
@@ -107,43 +117,22 @@ public class TaskControllerTest {
     @DisplayName("Can add task with post request ")
     public void canAddTaskWithPostRequest() throws Exception {
 
-        given(taskManagerService.addTask(any(Task.class))).willReturn(mockTask2);
+        when(taskManagerService.addTask(any(Task.class))).thenReturn(mockTask1);
 
-        List<Task> mockTaskList = Collections.singletonList(mockTask2);
-        given(taskManagerService.getAllTasks()).willReturn(mockTaskList);
+        List<Task> mockTaskList = Collections.singletonList(mockTask1);
+        when(taskManagerService.getAllTasks()).thenReturn(mockTaskList);
 
         // mock controller layer / api testing
         mockMvc.perform(post("/api/v1/tasks")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(mockTask2)))
+                        .content(objectMapper.writeValueAsString(mockTask1)))
                 .andExpect(status().isCreated())
-                .andExpect(content().json(objectMapper.writeValueAsString(mockTask2)));
+                .andExpect(content().json(objectMapper.writeValueAsString(mockTask1)));
 
         mockMvc.perform(get("/api/v1/tasks")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(mockTaskList)));
-
-    }
-
-    @Test
-    @DisplayName("Update task title and description by id")
-    public void testUpdateTaskTitleAndDescription() throws Exception {
-        Task updatedTaskInfo = new Task();
-        updatedTaskInfo.setTitle("Tidy kitchen");
-        updatedTaskInfo.setDescription("Clean the oven, hoover");
-        updatedTaskInfo.setCreatedDate(LocalDate.of(2024,9,27));
-        updatedTaskInfo.setCompletedDate(LocalDate.of( 2024,9,28));
-        updatedTaskInfo.setCompleted(false);
-
-        when(taskManagerService.updateTaskById(anyLong(), any(Task.class))).thenReturn(updatedTaskInfo);
-
-        mockMvc.perform(put("/api/v1/tasks/1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(updatedTaskInfo)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.title").value("Tidy kitchen"))
-                .andExpect(jsonPath("$.description").value("Clean the oven, hoover"));
 
     }
 
@@ -156,7 +145,23 @@ public class TaskControllerTest {
                 .andExpect(status().isNoContent());
     }
 
+    @Test
+    public void testUpdateTaskTitleAndDescription() throws Exception {
+        Task updatedTaskInfo = new Task();
+        updatedTaskInfo.setTitle("Tidy kitchen");
+        updatedTaskInfo.setDescription("Clean the oven, hoover");
+        updatedTaskInfo.setCreatedDate(LocalDate.of(2024, 9, 27));
+        updatedTaskInfo.setCompletedDate(LocalDate.of(2024, 9, 27));
+        updatedTaskInfo.setCompleted(false);
 
+        when(taskManagerService.updateTaskById(anyLong(), any(Task.class))).thenReturn(updatedTaskInfo);
+        mockMvc.perform(put("/api/v1/tasks/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updatedTaskInfo)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").value("Tidy kitchen"))
+                .andExpect(jsonPath("$.description").value("Clean the oven, hoover"));
+    }
 
 }
 
