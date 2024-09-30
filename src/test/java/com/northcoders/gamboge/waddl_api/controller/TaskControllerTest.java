@@ -56,12 +56,6 @@ public class TaskControllerTest {
     private Task mockTask1;
     private Task mockTask2;
 
-    @Test
-    public void test() {
-
-        assertTrue(true);
-    }
-
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
