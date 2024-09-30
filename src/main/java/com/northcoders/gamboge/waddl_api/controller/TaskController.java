@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1/waddl")
+@RequestMapping("/api/v1/tasks")
 public class TaskController {
 
     @Autowired
