@@ -19,8 +19,7 @@ public class TaskController {
 
     @GetMapping
     public ResponseEntity<List<Task>> getAllTasks() {
-        List<Task> tasks = taskManagerService.getAllTasks();
-        return new ResponseEntity<>(tasks, HttpStatus.OK);
+        return new ResponseEntity<>(taskManagerService.getAllTasks(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
