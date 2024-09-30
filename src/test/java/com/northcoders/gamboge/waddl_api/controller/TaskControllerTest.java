@@ -69,7 +69,6 @@ public class TaskControllerTest {
         assertTrue(true);
     }
 
-
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -78,6 +77,7 @@ public class TaskControllerTest {
 
         // Initialize mock data
         mockTask1 = new Task();
+        mockTask1.setId(1L);
         mockTask1.setTitle("Clean room");
         mockTask1.setDescription("Put washing away, hoover");
         mockTask1.setCreatedDate(LocalDate.of(2024, 9, 27));
@@ -85,57 +85,57 @@ public class TaskControllerTest {
         mockTask1.setCompleted(false);
 
         mockTask2 = new Task();
+        mockTask2.setId(2L);
         mockTask2.setTitle("Go shopping");
         mockTask2.setDescription("Buy bread, milk, eggs");
         mockTask2.setCreatedDate(LocalDate.of(2024, 9, 27));
         mockTask2.setCompletedDate(LocalDate.of(2024, 9, 28));
         mockTask2.setCompleted(false);
 
-
     }
-//
-//    @Test
-//    @DisplayName("Can retrieve all tasks")
-//    public void canRetrieveAllTasks() throws Exception {
-//        //arrange
-//        List<Task> mockTaskList = Arrays.asList(mockTask1, mockTask2);
-//        given(taskManagerService.getAllTasks()).willReturn(mockTaskList);
-//        //act and assert
-//        mockMvc.perform(get("/api/v1/tasks")
-//                        .accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andExpect(content().json(objectMapper.writeValueAsString(mockTaskList)));
-//    }
-//
-//    @Test
-//    @DisplayName("Can retrieve task by Id")
-//    public void canRetrieveTaskById() throws Exception {
-//        // Arrange
-//        given(taskManagerService.getTaskById(1L))
-//                .willReturn(Optional.of(mockTask1));
-//
-//        // Act & Assert
-//        mockMvc.perform(get("/api/v1/tasks/1")
-//                        .accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andExpect(content().json(objectMapper.writeValueAsString(mockTask1)));
-//    }
+
+    @Test
+    @DisplayName("Can retrieve all tasks")
+    public void canRetrieveAllTasks() throws Exception {
+        //arrange
+        List<Task> mockTaskList = Arrays.asList(mockTask1, mockTask2);
+        given(taskManagerService.getAllTasks()).willReturn(mockTaskList);
+        //act and assert
+        mockMvc.perform(get("/api/v1/tasks")
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andExpect(content()).andReturn();
+//        var status = status();
+//        var content = content();
+    }
+
+    @Test
+    @DisplayName("Can retrieve task by Id")
+    public void canRetrieveTaskById() throws Exception {
+        // Arrange
+        when(taskManagerService.getTaskById(1L))
+                .thenReturn(Optional.of(mockTask1));
+
+        // Act & Assert
+        mockMvc.perform(get("/api/v1/tasks/1")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(mockTask1)));
+    }
 
     @Test
     @DisplayName("Can add task with post request ")
     public void canAddTaskWithPostRequest() throws Exception {
 
-        given(taskManagerService.addTask(any(Task.class))).willReturn(mockTask2);
+        when(taskManagerService.addTask(any(Task.class))).thenReturn(mockTask1);
 
-        List<Task> mockTaskList = Collections.singletonList(mockTask2);
-        given(taskManagerService.getAllTasks()).willReturn(mockTaskList);
+        List<Task> mockTaskList = Collections.singletonList(mockTask1);
+        when(taskManagerService.getAllTasks()).thenReturn(mockTaskList);
 
         // mock controller layer / api testing
         mockMvc.perform(post("/api/v1/tasks")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(mockTask2)))
+                        .content(objectMapper.writeValueAsString(mockTask1)))
                 .andExpect(status().isCreated())
-                .andExpect(content().json(objectMapper.writeValueAsString(mockTask2)));
+                .andExpect(content().json(objectMapper.writeValueAsString(mockTask1)));
 
         mockMvc.perform(get("/api/v1/tasks")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -143,39 +143,18 @@ public class TaskControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(mockTaskList)));
 
     }
+
+
+    @Test
+    @DisplayName("Delete task")
+    public void testDeleteTask() throws Exception {
+        doNothing().when(taskManagerService).deleteTaskById(anyLong());
+
+        mockMvc.perform(delete("/api/v1/tasks/1"))
+                .andExpect(status().isNoContent());
+    }
+
+
+
 }
-//
-//    @Test
-//    @DisplayName("Update task title and description by id")
-//    public void testUpdateTaskTitleAndDescription() throws Exception {
-//        Task updatedTaskInfo = new Task();
-//        updatedTaskInfo.setTitle("Tidy kitchen");
-//        updatedTaskInfo.setDescription("Clean the oven, hoover");
-//        updatedTaskInfo.setCreatedDate(LocalDate.of(2024,9,27));
-//        updatedTaskInfo.setCompletedDate(LocalDate.of( 2024,9,28));
-//        updatedTaskInfo.setCompleted(false);
-//
-//        when(taskManagerService.updateTaskById(anyLong(), any(Task.class))).thenReturn(updatedTaskInfo);
-//
-//        mockMvc.perform(put("/api/v1/tasks/1")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(objectMapper.writeValueAsString(updatedTaskInfo)))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.title").value("Tidy kitchen"))
-//                .andExpect(jsonPath("$.description").value("Clean the oven, hoover"));
-//
-//    }
-//
-//    @Test
-//    @DisplayName("Delete task")
-//    public void testDeleteTask() throws Exception {
-//        doNothing().when(taskManagerService).deleteTaskById(anyLong());
-//
-//        mockMvc.perform(delete("/api/v1/tasks/1"))
-//                .andExpect(status().isNoContent());
-//    }
-//
-//
-//
-//}
-//
+
