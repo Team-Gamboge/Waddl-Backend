@@ -39,7 +39,7 @@ jobs:
       run: zip -r deploy.zip . -x '*.git*'
       
     - name: Upload JAR
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: 'artifact'
         path: deploy.zip
@@ -48,7 +48,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Download JAR
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v4
       with:
         name: artifact
     - name: Deploy to EB
