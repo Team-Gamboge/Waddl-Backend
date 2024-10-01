@@ -49,6 +49,7 @@ jobs:
           aws_secret_key: ${{ secrets.IAM_SECRET }}
           application_name: 'Waddl Backend'
           environment_name: WaddlBackend-env
-          version_label: 0
+          version_label: 1
+          use_existing_version_if_available: "true"
           region: eu-west-2
           deployment_package: deploy.zip
