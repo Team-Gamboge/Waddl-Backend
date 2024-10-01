@@ -15,10 +15,17 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
-
+  add-secret:
     runs-on: ubuntu-latest
+    steps:
+      - shell: bash
+        env:
+          DB_CONFIG_FILE: ${{secrets.DB_CONFIG_FILE}}
+        run: 'echo "$DB_CONFIG_FILE" > ./src/main/resources/application-prod.properties'
 
+  build:
+    needs: build
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK 21
@@ -29,3 +36,24 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn -B package --file pom.xml
+
+#  deploy:
+#    needs: build
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout source code
+#        uses: actions/checkout@v2
+#
+#      - name: Generate deployment package
+#        run: zip -r deploy.zip . -x '*.git*'
+#
+#      - name: Deploy to EB
+#        uses: einaregilsson/beanstalk-deploy@v22
+#        with:
+#          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#          application_name: MyApplicationName
+#          environment_name: MyApplication-Environment
+#          version_label: 12345
+#          region: us-west-2
+#          deployment_package: deploy.zip
