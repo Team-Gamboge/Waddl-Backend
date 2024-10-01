@@ -24,7 +24,7 @@ jobs:
         run: 'echo "$DB_CONFIG_FILE" > ./src/main/resources/application-prod.properties'
 
   build:
-    needs: build
+    needs: add-secret
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
