@@ -40,7 +40,7 @@ public class TaskManagerServiceImplTest {
         //Act
         List<Task> actualResult = taskManagerServiceImpl.getAllTasks();
         //Assert
-        assertThat(actualResult).hasSize(3);
+        assertThat(actualResult).hasSize(2);
         assertThat(actualResult).isEqualTo(tasks);
     }
 
