@@ -18,9 +18,12 @@ jobs:
   build:
     env:
       DB_CONFIG_FILE: ${{secrets.DB_CONFIG_FILE}}
+      USERNAME: ${{secrets.DB_USERNAME}}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+    - name: Test secrets
+      run: 'echo $USERNAME'
     - name: Deploy secrets
       run: 'echo "$DB_CONFIG_FILE" > src/main/resources/application-prod.properties'
     - name: Set up JDK 21
