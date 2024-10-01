@@ -38,6 +38,9 @@ jobs:
     steps:
       - name: Checkout source code
         uses: actions/checkout@v2
+        
+      - name: List files
+        run: ls -la
 
       - name: Generate deployment package
         run: zip -r deploy.zip . -x '*.git*'
