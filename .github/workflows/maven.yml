@@ -20,11 +20,11 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Test secrets
-      run: 
-        echo ${{ secrets.DB_USERNAME }}
+      run: echo ${{ secrets.DB_USERNAME }}
+    - name: Check directory
+      run: ls -la
     - name: Deploy secrets
-      run: 
-        echo "${{ secrets.DB_CONFIG_FILE }}" >> src/main/resources/application-prod.properties
+      run: echo "${{ secrets.DB_CONFIG_FILE }}" >> src/main/resources/application-prod.properties
     - name: Set up JDK 21
       uses: actions/setup-java@v4
       with:
