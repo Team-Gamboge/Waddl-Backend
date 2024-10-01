@@ -34,28 +34,24 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn -B package --file pom.xml
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout source code
-        uses: actions/checkout@v2
-        
-      - name: List files
-        run: tree .
-
-      - name: Generate deployment package
-        run: zip -r deploy.zip . -x '*.git*'
-
-      - name: Deploy to EB
-        uses: einaregilsson/beanstalk-deploy@v22
-        with:
-          aws_access_key: ${{ secrets.IAM_KEY }}
-          aws_secret_key: ${{ secrets.IAM_SECRET }}
-          application_name: 'Waddl Backend'
-          environment_name: WaddlBackend-env
-          version_label: 1
-          use_existing_version_if_available: "true"
-          region: eu-west-2
-          deployment_package: deploy.zip
+    - name: Checkout source code
+      uses: actions/checkout@v2
+    
+    - name: List files
+      run: tree .
+    
+    - name: Generate deployment package
+      run: zip -r deploy.zip . -x '*.git*'
+    
+    - name: Deploy to EB
+      uses: einaregilsson/beanstalk-deploy@v22
+      with:
+       aws_access_key: ${{ secrets.IAM_KEY }}
+       aws_secret_key: ${{ secrets.IAM_SECRET }}
+       application_name: 'Waddl Backend'
+       environment_name: WaddlBackend-env
+       version_label: 1
+       use_existing_version_if_available: "true"
+       region: eu-west-2
+       deployment_package: deploy.zip
+      
