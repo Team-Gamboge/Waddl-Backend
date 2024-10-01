@@ -50,7 +50,7 @@ jobs:
     - name: Download JAR
       uses: actions/download-artifact@v2
       with:
-        - name: artifact
+        name: artifact
     - name: Deploy to EB
       uses: einaregilsson/beanstalk-deploy@v22
       with:
