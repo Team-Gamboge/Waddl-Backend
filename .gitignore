@@ -129,5 +129,5 @@ fabric.properties
 # Ignore production configuration.
 *-prod.properties
 
-# Ignore class files
+# Ignore build files
 /target
