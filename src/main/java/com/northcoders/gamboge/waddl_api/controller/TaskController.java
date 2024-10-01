@@ -46,4 +46,9 @@ public class TaskController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/health")
+    public ResponseEntity<String> getHealth() {
+        return new ResponseEntity<>("Healthy!", HttpStatus.OK);
+    }
+
 }
