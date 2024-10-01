@@ -132,6 +132,7 @@ fabric.properties
 # Ignore build files
 /target
 *.class
+*.zip
 
 # Ignore secrets.
 env.properties
