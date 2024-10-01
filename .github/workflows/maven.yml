@@ -21,7 +21,7 @@ jobs:
       - shell: bash
         env:
           DB_CONFIG_FILE: ${{secrets.DB_CONFIG_FILE}}
-        run: 'echo "$DB_CONFIG_FILE" > ./src/main/resources/application-prod.properties'
+        run: 'echo "$DB_CONFIG_FILE" > src/main/resources/application-prod.properties'
 
   build:
     needs: add-secret
