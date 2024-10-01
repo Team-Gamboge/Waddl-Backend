@@ -20,10 +20,10 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Test secrets
-      run: |
+      run: 
         echo ${{ secrets.DB_USERNAME }}
     - name: Deploy secrets
-      run: |
+      run: 
         echo "${{ secrets.DB_CONFIG_FILE }}" >> src/main/resources/application-prod.properties
     - name: Set up JDK 21
       uses: actions/setup-java@v4
