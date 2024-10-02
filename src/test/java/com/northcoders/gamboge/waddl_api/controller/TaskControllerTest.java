@@ -67,16 +67,12 @@ public class TaskControllerTest {
         mockTask1.setId(1L);
         mockTask1.setTitle("Clean room");
         mockTask1.setDescription("Put washing away, hoover");
-        mockTask1.setCreatedDate(LocalDate.of(2024, 9, 27));
-        mockTask1.setCompletedDate(LocalDate.of(2024, 9, 28));
         mockTask1.setCompleted(false);
 
         mockTask2 = new Task();
         mockTask2.setId(2L);
         mockTask2.setTitle("Go shopping");
         mockTask2.setDescription("Buy bread, milk, eggs");
-        mockTask2.setCreatedDate(LocalDate.of(2024, 9, 27));
-        mockTask2.setCompletedDate(LocalDate.of(2024, 9, 28));
         mockTask2.setCompleted(false);
 
     }
@@ -150,8 +146,6 @@ public class TaskControllerTest {
         Task updatedTaskInfo = new Task();
         updatedTaskInfo.setTitle("Tidy kitchen");
         updatedTaskInfo.setDescription("Clean the oven, hoover");
-        updatedTaskInfo.setCreatedDate(LocalDate.of(2024, 9, 27));
-        updatedTaskInfo.setCompletedDate(LocalDate.of(2024, 9, 27));
         updatedTaskInfo.setCompleted(false);
 
         when(taskManagerService.updateTaskById(anyLong(), any(Task.class))).thenReturn(updatedTaskInfo);
