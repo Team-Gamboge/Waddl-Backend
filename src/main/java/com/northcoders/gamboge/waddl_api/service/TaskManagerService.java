@@ -10,8 +10,8 @@ public interface TaskManagerService {
 
     List<Task> getAllTasks();
     Optional<Task> getTaskById(Long id);
-    Task addTask(Task task);
+    Task addTask(Task task) throws IllegalAccessException;
     Task updateTaskById(Long id, Task task) throws NoSuchFieldException, IllegalAccessException;
-    void deleteTaskById(Long id);
+    String deleteTaskById(Long id);
 
 }

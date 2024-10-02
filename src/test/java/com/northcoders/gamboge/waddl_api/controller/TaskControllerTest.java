@@ -135,10 +135,12 @@ public class TaskControllerTest {
     @Test
     @DisplayName("Delete task")
     public void testDeleteTask() throws Exception {
-        doNothing().when(taskManagerService).deleteTaskById(anyLong());
-
+        String expectedResponse = "Task 1 deleted successfully.";
+        when(repo.existsById(1L)).thenReturn(true);        
+        when(taskManagerService.deleteTaskById(1L)).thenReturn(expectedResponse);
         mockMvc.perform(delete("/api/v1/tasks/1"))
-                .andExpect(status().isNoContent());
+                .andExpect(status().isOk())
+                .andExpect(content().string(expectedResponse));
     }
 
     @Test
@@ -156,6 +158,5 @@ public class TaskControllerTest {
                 .andExpect(jsonPath("$.title").value("Tidy kitchen"))
                 .andExpect(jsonPath("$.description").value("Clean the oven, hoover"));
     }
-
 }
 
