@@ -6,7 +6,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Deploy to AWS Elastic Beanstalk
+name: Test PR
 
 on:
   pull_request:
