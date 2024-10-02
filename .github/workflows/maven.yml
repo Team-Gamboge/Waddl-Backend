@@ -44,13 +44,7 @@ jobs:
         run: mvn clean package -Dmaven.test.skip=true
 
       - name: Generate deployment package
-        run: zip --password ${{ secrets.ARTIFACT_PASSWORD }} -r deploy.zip . -x '*.git*'
-        
-      - name: Upload artifact for testing
-        uses: actions/upload-artifact@v4
-        with:
-          name: deploy.zip
-          path: deploy.zip        
+        run: zip -r deploy.zip . -x '*.git*'       
 
       - name: Deploy to EB
         uses: einaregilsson/beanstalk-deploy@v20
