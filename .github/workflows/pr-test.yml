@@ -42,3 +42,9 @@ jobs:
 
       - name: Generate encrypted deployment artifact.
         run: zip --password ${{ secrets.ARTIFACT_PASSWORD }} -r deploy.zip . -x '*.git*'
+
+      - name: Upload artifact for testing
+        uses: actions/upload-artifact@v4
+        with:
+          name: deploy.zip
+          path: deploy.zip        
