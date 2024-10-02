@@ -52,13 +52,14 @@ jobs:
           name: deploy.zip
           path: deploy.zip        
 
-#      - name: Deploy to EB
-#        uses: einaregilsson/beanstalk-deploy@v20
-#        with:
-#          aws_access_key: ${{ secrets.IAM_KEY }}
-#          aws_secret_key: ${{ secrets.IAM_SECRET }}
-#          application_name: "Waddl Backend"
-#          environment_name: WaddlBackend-env
-#          version_label: ${{ github.sha }}
-#          region: eu-west-2
-#          deployment_package: deploy.zip
+      - name: Deploy to EB
+        uses: einaregilsson/beanstalk-deploy@v20
+        with:
+          aws_access_key: ${{ secrets.IAM_KEY }}
+          aws_secret_key: ${{ secrets.IAM_SECRET }}
+          application_name: "Waddl Backend"
+          environment_name: WaddlBackend-env
+          version_label: ${{ github.sha }}
+          region: eu-west-2
+          deployment_package: deploy.zip
+          wait_for_deployment: false
