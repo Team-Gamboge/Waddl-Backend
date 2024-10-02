@@ -47,6 +47,7 @@ public class TaskManagerServiceImplTest {
     void testGetTaskById() throws Exception {
         Task expectedResult = new Task(3L, "Go eminem", "Go Encore", false);
         when(mockTaskRepository.findById(expectedResult.getId())).thenReturn(Optional.of(expectedResult));
+        when(mockTaskRepository.existsById(expectedResult.getId())).thenReturn(true);
         Optional<Task> actualResult = taskManagerServiceImpl.getTaskById(expectedResult.getId());
         assertEquals(actualResult.get(), expectedResult);
     }
@@ -57,6 +58,7 @@ public class TaskManagerServiceImplTest {
         Long testId = 3L;
         Task testEminem = new Task(3L, "Go eminem", "Go Encore",  false);
         when(mockTaskRepository.findById(testId)).thenReturn(Optional.of(testEminem));
+        when(mockTaskRepository.existsById(testId)).thenReturn(true);
         doNothing().when(mockTaskRepository).deleteById(testId);
         taskManagerServiceImpl.deleteTaskById(testId);
         verify(mockTaskRepository, times(1)).deleteById(testId);

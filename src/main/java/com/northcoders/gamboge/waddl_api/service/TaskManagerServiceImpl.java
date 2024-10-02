@@ -1,5 +1,6 @@
 package com.northcoders.gamboge.waddl_api.service;
 
+import com.northcoders.gamboge.waddl_api.exception.TaskNotFoundException;
 import com.northcoders.gamboge.waddl_api.model.Task;
 import com.northcoders.gamboge.waddl_api.repository.TaskRepository;
 import com.northcoders.gamboge.waddl_api.utility.Utility;
@@ -23,14 +24,21 @@ public class TaskManagerServiceImpl implements TaskManagerService {
 
     @Override
     public Optional<Task> getTaskById(Long id) {
-        return taskRepository.findById(id);
+        if (taskRepository.existsById(id))
+            return taskRepository.findById(id);
+
+        throw new TaskNotFoundException(String.format("Task with ID %d not found.", id));
     }
 
     @Override
-    public Task addTask(Task task) {
+    public Task addTask(Task task) throws IllegalAccessException {
         if (task == null) {
-            throw new IllegalArgumentException("Task cannot be null");
+            throw new IllegalArgumentException("Task cannot be null.");
         }
+        
+        if (Utility.containsBlankStringFields(task)) 
+            throw new IllegalArgumentException("Task cannot have any empty fields.");
+            
         return taskRepository.save(task);
     }
 
@@ -45,12 +53,18 @@ public class TaskManagerServiceImpl implements TaskManagerService {
 
             return taskRepository.save(existingTask);
         } else {
-            throw new NoSuchElementException("Task not found with entered ID: " + id);
+            throw new TaskNotFoundException("Task not found with entered ID: " + id);
         }
     }
 
     @Override
-    public void deleteTaskById(Long id) {
-        taskRepository.deleteById(id);
+    public String deleteTaskById(Long id) {
+        if (taskRepository.existsById(id)) {
+            taskRepository.deleteById(id);
+            
+            return String.format("Task %d deleted successfully.", id);            
+        }
+        
+        throw new TaskNotFoundException(String.format("Task with ID %d not found.", id));        
     }
 }
