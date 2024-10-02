@@ -28,7 +28,7 @@ jobs:
         with:
           tokenPrefix: '{'
           tokenSuffix: '}'
-          files: '[application-prod.properties]'
+          files: '["application-prod.properties"]'
         env:
           DB_URL: ${{ secrets.DB_URL }}
           DB_USERNAME: ${{ secrets.DB_USERNAME }}
