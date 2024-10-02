@@ -2,6 +2,7 @@ package com.northcoders.gamboge.waddl_api.service;
 
 import com.northcoders.gamboge.waddl_api.model.Task;
 import com.northcoders.gamboge.waddl_api.repository.TaskRepository;
+import com.northcoders.gamboge.waddl_api.utility.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,15 +35,13 @@ public class TaskManagerServiceImpl implements TaskManagerService {
     }
 
     @Override
-    public Task updateTaskById(Long id, Task task) {
+    public Task updateTaskById(Long id, Task task) throws NoSuchFieldException, IllegalAccessException {
         Optional<Task> optionalTask = taskRepository.findById(id);
 
         if (optionalTask.isPresent()) {
             Task existingTask = optionalTask.get();
 
-            existingTask.setTitle(task.getTitle());
-            existingTask.setDescription(task.getDescription());
-            existingTask.setCompleted(task.isCompleted());
+            Utility.updateFieldsWhereNotNull(task, existingTask);
 
             return taskRepository.save(existingTask);
         } else {
