@@ -25,9 +25,9 @@ jobs:
 
       - name: Create production properties file
         run: |
-          sed -i 's|${DB_URL}|${{ secrets.DB_URL }}|g' src/main/resources/application-prod.properties
-          sed -i 's|${DB_USERNAME}|${{ secrets.DB_USERNAME }}|g' src/main/resources/application-prod.properties
-          sed -i 's|${DB_PASSWORD}|${{ secrets.DB_PASSWORD }}|g' src/main/resources/application-prod.properties
+          sed -i 's/{DB_URL}/${{ secrets.DB_URL }}/g' src/main/resources/application-prod.properties
+          sed -i 's/{DB_USERNAME}/${{ secrets.DB_USERNAME }}/g' src/main/resources/application-prod.properties
+          sed -i 's/{DB_PASSWORD}/${{ secrets.DB_PASSWORD }}/g' src/main/resources/application-prod.properties
       
       - name: Set up JDK 21
         uses: actions/setup-java@v2
