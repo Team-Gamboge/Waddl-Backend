@@ -35,7 +35,7 @@ public class TaskController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Task> updateTaskById(@PathVariable Long id, @RequestBody Task task) {
+    public ResponseEntity<Task> updateTaskById(@PathVariable Long id, @RequestBody Task task) throws NoSuchFieldException, IllegalAccessException {
         Task updatedTask = taskManagerService.updateTaskById(id, task);
         return ResponseEntity.ok(updatedTask);
     }

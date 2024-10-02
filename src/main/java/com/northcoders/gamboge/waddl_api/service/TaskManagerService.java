@@ -11,7 +11,7 @@ public interface TaskManagerService {
     List<Task> getAllTasks();
     Optional<Task> getTaskById(Long id);
     Task addTask(Task task);
-    Task updateTaskById(Long id, Task task);
+    Task updateTaskById(Long id, Task task) throws NoSuchFieldException, IllegalAccessException;
     void deleteTaskById(Long id);
 
 }
