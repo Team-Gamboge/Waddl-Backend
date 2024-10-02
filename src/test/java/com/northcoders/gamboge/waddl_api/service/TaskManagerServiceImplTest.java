@@ -29,11 +29,9 @@ public class TaskManagerServiceImplTest {
     public void testGetAllTasksReturnsListOfTasks() {
         //Arrange
         List<Task> tasks = new ArrayList<>();
-        tasks.add(new Task(1L,"Clean room","put washing away",LocalDate.of(2024,9,27),
-                LocalDate.of( 2024,9,28), false));
+        tasks.add(new Task(1L,"Clean room","put washing away", false));
 
-          tasks.add(new Task(2L,"Go shopping","buy bread, milk, eggs",LocalDate.of(2024,9,27),
-                LocalDate.of( 2024,9,28), false));
+          tasks.add(new Task(2L,"Go shopping","buy bread, milk, eggs", false));
 
         // Important comment!
         when(mockTaskRepository.findAll()).thenReturn(tasks);
@@ -47,8 +45,7 @@ public class TaskManagerServiceImplTest {
     @Test
     @DisplayName("GET task by id")
     void testGetTaskById() throws Exception {
-        Task expectedResult = new Task(3L, "Go eminem", "Go Encore", LocalDate.of(2024,9,27),
-                LocalDate.of( 2024,9,28), false);
+        Task expectedResult = new Task(3L, "Go eminem", "Go Encore", false);
         when(mockTaskRepository.findById(expectedResult.getId())).thenReturn(Optional.of(expectedResult));
         Optional<Task> actualResult = taskManagerServiceImpl.getTaskById(expectedResult.getId());
         assertEquals(actualResult.get(), expectedResult);
@@ -58,13 +55,11 @@ public class TaskManagerServiceImplTest {
     @DisplayName("Test for delete task")
     public void testForDeleteTask() {
         Long testId = 3L;
-        Task testEminem = new Task(3L, "Go eminem", "Go Encore", LocalDate.of(2024,9,27),
-                LocalDate.of( 2024,9,28), false);
+        Task testEminem = new Task(3L, "Go eminem", "Go Encore",  false);
         when(mockTaskRepository.findById(testId)).thenReturn(Optional.of(testEminem));
         doNothing().when(mockTaskRepository).deleteById(testId);
         taskManagerServiceImpl.deleteTaskById(testId);
         verify(mockTaskRepository, times(1)).deleteById(testId);
     }
-
 
 }
