@@ -144,6 +144,7 @@ public class TaskControllerTest {
     }
 
     @Test
+    @DisplayName("Test if a task can be updated.")
     public void testUpdateTaskTitleAndDescription() throws Exception {
         Task updatedTaskInfo = new Task();
         updatedTaskInfo.setTitle("Tidy kitchen");
