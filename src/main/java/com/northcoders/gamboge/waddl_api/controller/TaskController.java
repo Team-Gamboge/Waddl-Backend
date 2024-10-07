@@ -29,15 +29,12 @@ public class TaskController {
 
     @PostMapping
     public ResponseEntity<Task> addTask(@RequestBody Task task) throws IllegalAccessException {
-        if (task == null) {
-            return ResponseEntity.badRequest().build(); // returns 400 bad request
-        } return ResponseEntity.status(HttpStatus.CREATED).body(taskManagerService.addTask(task));
+        return ResponseEntity.status(HttpStatus.CREATED).body(taskManagerService.addTask(task));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Task> updateTaskById(@PathVariable Long id, @RequestBody Task task) throws NoSuchFieldException, IllegalAccessException {
-        Task updatedTask = taskManagerService.updateTaskById(id, task);
-        return ResponseEntity.ok(updatedTask);
+        return ResponseEntity.ok(taskManagerService.updateTaskById(id, task));
     }
 
     @DeleteMapping("/{id}")
