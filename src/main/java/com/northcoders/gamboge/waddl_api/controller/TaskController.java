@@ -3,6 +3,8 @@ package com.northcoders.gamboge.waddl_api.controller;
 import com.northcoders.gamboge.waddl_api.model.Task;
 import com.northcoders.gamboge.waddl_api.service.TaskManagerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,26 +20,31 @@ public class TaskController {
     TaskManagerService taskManagerService;
 
     @GetMapping
+    @Cacheable("taskCache2")
     public ResponseEntity<List<Task>> getAllTasks() {
         return new ResponseEntity<>(taskManagerService.getAllTasks(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
+    @Cacheable("taskCache2")
     public Optional<Task> getTaskById(@PathVariable Long id) {
         return taskManagerService.getTaskById(id);
     }
 
     @PostMapping
+    @CacheEvict(cacheNames = "taskCache1", allEntries = true)
     public ResponseEntity<Task> addTask(@RequestBody Task task) throws IllegalAccessException {
         return ResponseEntity.status(HttpStatus.CREATED).body(taskManagerService.addTask(task));
     }
 
     @PutMapping("/{id}")
+    @CacheEvict(cacheNames = "taskCache1", allEntries = true)
     public ResponseEntity<Task> updateTaskById(@PathVariable Long id, @RequestBody Task task) throws NoSuchFieldException, IllegalAccessException {
         return ResponseEntity.ok(taskManagerService.updateTaskById(id, task));
     }
 
     @DeleteMapping("/{id}")
+    @CacheEvict(cacheNames = "taskCache1", allEntries = true)
     public ResponseEntity<String> deleteAlbumById(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(taskManagerService.deleteTaskById(id));
     }
